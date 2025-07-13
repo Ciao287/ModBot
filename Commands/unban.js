@@ -35,6 +35,3 @@ module.exports = {
         await interaction.reply({ content: `**${interaction.user.tag}** unbanned <@${user.id}> with reason: ${reason || 'No reason provided'}` })
     }
 };
-
-
-wtkE74IVBR
