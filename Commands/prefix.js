@@ -59,6 +59,7 @@ module.exports = {
                 await guildSchema.save();
 
                 await interaction.editReply({ content: `You changed the prefix for chat commands to \`${prefix}\``, flags: MessageFlags.Ephemeral });
+                return;
         }
     }
 };
