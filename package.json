@@ -8,5 +8,10 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "discord.js": "^14.21.0",
+    "fs": "^0.0.1-security",
+    "mongoose": "^8.16.3"
+  }
 }
