@@ -40,7 +40,6 @@ module.exports = {
             if (user.roles.highest.position >= interaction.member.roles.highest.position) return interaction.reply({ content: `You can't ban <@${user.id}>. He has a higher or equal role than you.`, flags: MessageFlags.Ephemeral });
 
             if (user.roles.highest.position >= interaction.guild.members.cache.get(client.user.id).roles.highest.position) return interaction.reply({ content: `I can't ban <@${user.id}>. He has a higher or equal role than me.`, flags: MessageFlags.Ephemeral });
-        
         } catch(error) {
             if (error.code !== 10007) console.log(error);
         };
@@ -50,6 +49,6 @@ module.exports = {
             deleteMessageSeconds: 7 * 24 * 60 * 60
         });
 
-        await interaction.reply({ content: `**${interaction.user.tag}** banned <@${user.id}> with reason: ${reason || 'No reason provided'}` })
+        await interaction.reply({ content: `**${interaction.user.tag}** banned <@${user.id}> with reason: ${reason || 'No reason provided'}` });
     }
 };

@@ -14,7 +14,6 @@ module.exports = {
             .addStringOption(option =>
                 option.setName('prefix')
                 .setDescription('Enter prefix')
-                .setMaxLength(5)
                 .setMinLength(1)
                 .setRequired(true)))
         .setContexts(['Guild'])
@@ -42,9 +41,14 @@ module.exports = {
             case 'change':
                 const prefix = options.getString('prefix');
 
+                if(prefix.length > 5 && prefix !== `<@${client.application.id}>`) {
+                    await interaction.editReply({ content: 'The prefix length must be between 1 and 5 characters.', flags: MessageFlags.Ephemeral });
+                    return;
+                };
+
                 let guildSchema = await Schema.findOne({ Guild: guild.id });
                 if (prefix === '--') {
-                    await interaction.editReply({ content: 'You changed the prefix for chat commands to `--`', flags: MessageFlags.Ephemeral })
+                    await interaction.editReply({ content: 'You changed the prefix for chat commands to `--`', flags: MessageFlags.Ephemeral });
                     if(guildSchema) await Schema.deleteOne({ _id: guildSchema._id });
                     return;
                 };
