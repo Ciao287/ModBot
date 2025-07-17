@@ -16,8 +16,8 @@ Here is a list of the commands it has:
   I put [PREFIX] to indicate where the prefix goes in the command. The default prefix is `--`.
   - [PREFIX]prefix => Show the bot's server prefix.
   - [PREFIX]prefix `prefix` => Change the bot's server prefix.
-  - [PREFIX]ban `member` `reason` => Ban a user with a reason (you can use the member ID, mention, or tag)
-  - [PREFIX]unban `member` `reason` => Unban a user with a reason (you can use the member ID, mention, or tag)
+  - [PREFIX]ban `member` `reason` => Ban a user with a reason (you can use the member ID, mention, or tag).
+  - [PREFIX]unban `member` `reason` => Unban a user with a reason (you can use the member ID, mention, or tag).
   - [PREFIX]timeout set `member` `duration` `reason` => Timeout a user with a duration (required) and reason (you can use the member ID, mention, or tag).
   - [PREFIX]timeout remove `member` `reason` => Remove a user's timeout with a reason (you can use the member ID, mention, or tag).
 
