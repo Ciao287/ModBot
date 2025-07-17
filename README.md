@@ -8,13 +8,18 @@ Here is a list of the commands it has:
 - slash commands:
   - /prefix show => Show the bot's server prefix.
   - /prefix change `prefix` => Change the bot's server prefix.
-  - /ban `member` `reason` => Ban a user with a reason (you can use the member ID, mention, or tag)
-  - /unban `member` `reason` => Unban a user with a reason (you can use the member ID, mention, or tag)
+  - /ban `member` `reason` => Ban a user with a reason (you can use the member ID, mention, or tag).
+  - /unban `member` `reason` => Unban a user with a reason (you can use the member ID, mention, or tag).
+  - /timeout set `member` `duration` `reason` => Timeout a user with a duration (required) and reason (you can use the member ID, mention, or tag).
+  - /timeout remove `member` `reason` => Remove a user's timeout with a reason (you can use the member ID, mention, or tag).
 - chat commands:
-  - --prefix => Show the bot's server prefix.
-  - --prefix `prefix` => Change the bot's server prefix.
-  - --ban `member` `reason` => Ban a user with a reason (you can use the member ID, mention, or tag)
-  - --unban `member` `reason` => Unban a user with a reason (you can use the member ID, mention, or tag)
+  I put [PREFIX] to indicate where the prefix goes in the command. The default prefix is `--`.
+  - [PREFIX]prefix => Show the bot's server prefix.
+  - [PREFIX]prefix `prefix` => Change the bot's server prefix.
+  - [PREFIX]ban `member` `reason` => Ban a user with a reason (you can use the member ID, mention, or tag)
+  - [PREFIX]unban `member` `reason` => Unban a user with a reason (you can use the member ID, mention, or tag)
+  - [PREFIX]timeout set `member` `duration` `reason` => Timeout a user with a duration (required) and reason (you can use the member ID, mention, or tag).
+  - [PREFIX]timeout remove `member` `reason` => Remove a user's timeout with a reason (you can use the member ID, mention, or tag).
 
 ## How to Install
 

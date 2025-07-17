@@ -13,7 +13,7 @@ module.exports = {
             .setDescription('Change the bot\'s server prefix.')
             .addStringOption(option =>
                 option.setName('prefix')
-                .setDescription('Enter prefix')
+                .setDescription('Enter prefix.')
                 .setMinLength(1)
                 .setRequired(true)))
         .setContexts(['Guild'])

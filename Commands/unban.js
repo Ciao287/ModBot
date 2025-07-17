@@ -6,11 +6,11 @@ module.exports = {
         .setDescription(`Unban a member from the server.`)
         .addStringOption(option => 
             option.setName('member')
-            .setDescription('Enter a member ID, mention or tag')
+            .setDescription('Enter a member ID, tag, or mention.')
             .setRequired(true))
         .addStringOption(option =>
             option.setName('reason')
-            .setDescription('Enter the reason for the ban'))
+            .setDescription('Enter the reason for the unban.'))
         .setContexts(['Guild'])
         .setDefaultMemberPermissions(PermissionFlagsBits.BanMembers),
     async execute(interaction, client) {
@@ -19,6 +19,7 @@ module.exports = {
         const reason = options.getString('reason') || ''
 
         if (!interaction.guild.members.me.permissions.has(PermissionsBitField.Flags.BanMembers)) return interaction.reply({ content: 'I\'m not allowed to ban or unban people!', flags: MessageFlags.Ephemeral });
+        if (interaction.guild.members.me.communicationDisabledUntilTimestamp > Date.now()) return interaction.reply({ content: `I can't perform this action because I'm currently timed out.`, flags: MessageFlags.Ephemeral });
 
         if (member.startsWith('<@')) member = member.replace(/[<@>]/g, '');
         let user = false;

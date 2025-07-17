@@ -6,11 +6,11 @@ module.exports = {
         .setDescription(`Ban a member from the server.`)
         .addStringOption(option => 
             option.setName('member')
-            .setDescription('Enter a member ID, mention or tag')
+            .setDescription('Enter a member ID, tag, or mention.')
             .setRequired(true))
         .addStringOption(option =>
             option.setName('reason')
-            .setDescription('Enter the reason for the ban'))
+            .setDescription('Enter the reason for the ban.'))
         .setContexts(['Guild'])
         .setDefaultMemberPermissions(PermissionFlagsBits.BanMembers),
     async execute(interaction, client) {
@@ -19,6 +19,7 @@ module.exports = {
         const reason = options.getString('reason') || ''
 
         if (!interaction.guild.members.me.permissions.has(PermissionsBitField.Flags.BanMembers)) return interaction.reply({ content: 'I\'m not allowed to ban or unban people!', flags: MessageFlags.Ephemeral });
+        if (interaction.guild.members.me.communicationDisabledUntilTimestamp > Date.now()) return interaction.reply({ content: `I can't perform this action because I'm currently timed out.`, flags: MessageFlags.Ephemeral });
 
         if (member.startsWith('<@')) member = member.replace(/[<@>]/g, '');
         let user = false;
@@ -36,10 +37,10 @@ module.exports = {
             if (user.id === client.application.id) return interaction.reply({ content: `I can't ban myself!`, flags: MessageFlags.Ephemeral });
 
             if (user.id === interaction.member.id) return interaction.reply({ content: `You can't ban yourself!`, flags: MessageFlags.Ephemeral });
+            
+            if (user.id === guild.ownerId) return interaction.reply({ content: `You can't ban the server owner!`, flags: MessageFlags.Ephemeral });
 
             if (user.roles.highest.position >= interaction.member.roles.highest.position && guild.ownerId !== interaction.member.id) return interaction.reply({ content: `You can't ban <@${user.id}>! He has a higher or equal role than you.`, flags: MessageFlags.Ephemeral });
-
-            if (user.id === guild.ownerId) return interaction.reply({ content: `You can't ban the server onwer!`, flags: MessageFlags.Ephemeral });
             
             if (user.roles.highest.position >= interaction.guild.members.cache.get(client.user.id).roles.highest.position) return interaction.reply({ content: `I can't ban <@${user.id}>! He has a higher or equal role than me.`, flags: MessageFlags.Ephemeral });
         } catch(error) {
