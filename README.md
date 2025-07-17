@@ -6,6 +6,7 @@ This bot helps you moderate your server!
 
 Here is a list of the commands it has:
 - slash commands:
+  - /ping => Show the bot's ping.
   - /prefix show => Show the bot's server prefix.
   - /prefix change `prefix` => Change the bot's server prefix.
   - /ban `member` `reason` => Ban a user with a reason (you can use the member ID, mention, or tag).
