@@ -22,7 +22,7 @@ module.exports = {
             const member = await guild.members.fetch(author.id)
             if (!member.permissions.has(PermissionsBitField.Flags.Administrator)) return;
             if (args.length === 0) {
-                const msg = await message.reply({ content: 'You must enter the prefix.' });
+                const msg = await message.reply({ content: `The prefix for chat commands is \`${prefix}\``, flags: MessageFlags.Ephemeral });
                 await message.delete().catch(e => {});
                 setTimeout(() => {
                     msg.delete();
@@ -106,13 +106,15 @@ module.exports = {
                 user = await guild.members.fetch(user.id);
                 let msgcont;
 
-                if (user.id === client.application.id && !msgcont) msgcont = 'I can\'t ban myself!';
+                if (user.id === client.application.id && !msgcont) msgcont = `I can't ban myself!`;
 
-                if (user.id === member.id && !msgcont) msgcont = 'You can\'t ban yourself!';
+                if (user.id === member.id && !msgcont) msgcont = `You can't ban yourself!`;
 
-                if (user.roles.highest.position >= member.roles.highest.position && !msgcont) msgcont = `You can't ban <@${user.id}>. He has a higher or equal role than you.`;
+                if (user.roles.highest.position >= member.roles.highest.position && guild.ownerId !== member.id && !msgcont) msgcont = `You can't ban <@${user.id}>! He has a higher or equal role than you.`;
 
-                if (user.roles.highest.position >= guild.members.cache.get(client.user.id).roles.highest.position && !msgcont) msgcont = `I can't ban <@${user.id}>. He has a higher or equal role than me.`;
+                if (user.id === guild.ownerId) msgcont = `You can't ban the server onwer!`;
+
+                if (user.roles.highest.position >= guild.members.cache.get(client.user.id).roles.highest.position && !msgcont) msgcont = `I can't ban <@${user.id}>! He has a higher or equal role than me.`;
 
                 if (msgcont) {
                     const msg = await message.reply({ content: msgcont });

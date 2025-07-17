@@ -33,13 +33,15 @@ module.exports = {
         try {
             user = await guild.members.fetch(user.id);
 
-            if (user.id === client.application.id) return interaction.reply({ content: 'I can\'t ban myself!', flags: MessageFlags.Ephemeral });
+            if (user.id === client.application.id) return interaction.reply({ content: `I can't ban myself!`, flags: MessageFlags.Ephemeral });
 
-            if (user.id === interaction.member.id) return interaction.reply({ content: 'You can\'t ban yourself!', flags: MessageFlags.Ephemeral });
+            if (user.id === interaction.member.id) return interaction.reply({ content: `You can't ban yourself!`, flags: MessageFlags.Ephemeral });
 
-            if (user.roles.highest.position >= interaction.member.roles.highest.position) return interaction.reply({ content: `You can't ban <@${user.id}>. He has a higher or equal role than you.`, flags: MessageFlags.Ephemeral });
+            if (user.roles.highest.position >= interaction.member.roles.highest.position && guild.ownerId !== interaction.member.id) return interaction.reply({ content: `You can't ban <@${user.id}>! He has a higher or equal role than you.`, flags: MessageFlags.Ephemeral });
 
-            if (user.roles.highest.position >= interaction.guild.members.cache.get(client.user.id).roles.highest.position) return interaction.reply({ content: `I can't ban <@${user.id}>. He has a higher or equal role than me.`, flags: MessageFlags.Ephemeral });
+            if (user.id === guild.ownerId) return interaction.reply({ content: `You can't ban the server onwer!`, flags: MessageFlags.Ephemeral });
+            
+            if (user.roles.highest.position >= interaction.guild.members.cache.get(client.user.id).roles.highest.position) return interaction.reply({ content: `I can't ban <@${user.id}>! He has a higher or equal role than me.`, flags: MessageFlags.Ephemeral });
         } catch(error) {
             if (error.code !== 10007) console.log(error);
         };

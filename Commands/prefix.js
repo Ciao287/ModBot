@@ -7,10 +7,10 @@ module.exports = {
         .setDescription('Use prefix commands.')
         .addSubcommand(subcommand =>
             subcommand.setName('show')
-            .setDescription('Show bot prefix.'))
+            .setDescription('Show the bot\'s server prefix.'))
         .addSubcommand(subcommand =>
             subcommand.setName('change')
-            .setDescription('Change the bot prefix.')
+            .setDescription('Change the bot\'s server prefix.')
             .addStringOption(option =>
                 option.setName('prefix')
                 .setDescription('Enter prefix')
