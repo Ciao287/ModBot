@@ -1,4 +1,4 @@
 {
-  "token": "",
-  "mongodb": ""
+  "token": "YOUR BOT'S TOKEN => https://discord.com/developers/applications",
+  "mongodb": "YOUR MONGODB TOKEN"
 }
