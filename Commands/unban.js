@@ -1,4 +1,5 @@
 const { SlashCommandBuilder, MessageFlags, PermissionFlagsBits, PermissionsBitField } = require("discord.js");
+const TempModSchema = require('../Models/TempMod.js');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -30,6 +31,16 @@ module.exports = {
         });
 
         if (!user) return;
+
+        const schema = TempModSchema.findOne({Guild: guild.id});
+        if (schema) {
+            const bannedUserSchema = schema.tempBans.find(obj => obj.id === user.id);
+            if (bannedUserSchema) schema.tempBans = schema.tempBans.filter(obj => obj !== bannedUserSchema);
+            await schema.save();
+        };
+        
+        const bannedUser = client.tempMods.bans.find(obj => obj.guildId === guild.id && obj.userId === user.id);
+        if (bannedUser) client.tempMods.bans = client.tempMods.bans.filter(obj => obj !== bannedUser);
 
         await guild.members.unban(user.id, reason);
 

@@ -1,15 +1,15 @@
-const {model, Schema, Types} = require('mongoose');
+const { model, Schema } = require('mongoose');
 
 let TempModSchema = new Schema({
-    Guild: String,
-    muteRole: Schema.Types.Mixed,
+    Guild: { type: String, required: true },
+    muteRole: { type: Schema.Types.Mixed, required: true },
     tempMutes: [{
-        id: String,
-        duration: Number
+        id: { type: String, required: true },
+        duration: { type: Number, required: true }
     }],
     tempBans: [{
-        id: String,
-        duration: Number
+        id: { type: String, required: true },
+        duration: { type: Number, required: true }
     }]
 });
 

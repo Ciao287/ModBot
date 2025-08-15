@@ -1,4 +1,5 @@
 const { SlashCommandBuilder, MessageFlags, PermissionFlagsBits, PermissionsBitField } = require("discord.js");
+const TempModSchema = require('../Models/TempMod.js');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -9,6 +10,9 @@ module.exports = {
             .setDescription('Enter a member ID, tag, or mention.')
             .setRequired(true))
         .addStringOption(option =>
+            option.setName('duration')
+            .setDescription('Enter the ban duration.'))
+        .addStringOption(option =>
             option.setName('reason')
             .setDescription('Enter the reason for the ban.'))
         .setContexts(['Guild'])
@@ -16,7 +20,15 @@ module.exports = {
     async execute(interaction, client) {
         const { options, guild } = interaction;
         let member = options.getString('member');
-        const reason = options.getString('reason') || ''
+        let duration = options.getString('duration');
+        const start = Date.now();
+        let convertedDuration;
+        if (duration) {
+            convertedDuration = ms(duration);
+            if (!convertedDuration) return interaction.reply({ content: `You must specify a valid duration.`, flags: MessageFlags.Ephemeral });
+            if (convertedDuration > 31557600000000) duration = false;
+        };
+        const reason = options.getString('reason') || '';
 
         if (!interaction.guild.members.me.permissions.has(PermissionsBitField.Flags.BanMembers)) return interaction.reply({ content: 'I\'m not allowed to ban or unban people!', flags: MessageFlags.Ephemeral });
         if (interaction.guild.members.me.communicationDisabledUntilTimestamp > Date.now()) return interaction.reply({ content: `I can't perform this action because I'm currently timed out.`, flags: MessageFlags.Ephemeral });
@@ -47,11 +59,84 @@ module.exports = {
             if (error.code !== 10007) console.log(error);
         };
 
-        await guild.members.ban(user.id, {
-            reason: reason,
-            deleteMessageSeconds: 7 * 24 * 60 * 60
-        });
+        if (!duration) {
+            const schema = TempModSchema.findOne({Guild: guild.id});
+            if (schema) {
+                const bannedUserSchema = schema.tempBans.find(obj => obj.id === user.id);
+                if (bannedUserSchema) schema.tempBans = schema.tempBans.filter(obj => obj !== bannedUserSchema);
+                await schema.save();
+            };
 
-        await interaction.reply({ content: `**${interaction.user.tag}** banned <@${user.id}> with reason: ${reason || 'No reason provided'}` });
+            const bannedUser = client.tempMods.bans.find(obj => obj.guildId === guild.id && obj.userId === user.id);
+            if (bannedUser) client.tempMods.bans = client.tempMods.bans.filter(obj => obj !== bannedUser);
+            
+            await guild.members.ban(user.id, {
+                reason: reason,
+                deleteMessageSeconds: 7 * 24 * 60 * 60
+            });
+
+            await interaction.reply({ content: `**${interaction.user.tag}** banned <@${user.id}> with reason: ${reason || 'No reason provided'}` });
+        } else {
+            if (convertedDuration > 60 * 60 * 1000) {
+                let schema = TempModSchema.findOne({Guild: guild.id});
+                if (!schema) schema = new TempModSchema({
+                    Guild: guild.id,
+                    muteRole: false,
+                    tempMutes: [],
+                    tempBans: []
+                });
+
+                const bannedUser = client.tempMods.bans.find(obj => obj.guildId === guild.id && obj.userId === user.id);
+                if (bannedUser) client.tempMods.bans = client.tempMods.bans.filter(obj => obj !== bannedUser);
+
+                const bannedUserSchema = schema.tempBans.find(obj => obj.id === user.id);
+
+                if (!bannedUserSchema) {
+                    schema.tempBans.push({
+                        id: user.id,
+                        duration: start + convertedDuration
+                    });
+                } else {
+                    bannedUserSchema.duration = start + convertedDuration;
+                };
+
+                await schema.save();
+
+                await guild.members.ban(user.id, {
+                    reason: reason,
+                });
+
+                await interaction.reply({ content: `**${interaction.user.tag}** banned <@${user.id}> for ${duration} with reason: ${reason || 'No reason provided'}` });
+            } else {
+                const schema = TempModSchema.findOne({Guild: guild.id});
+                if (schema) {
+                    const bannedUserSchema = schema.tempBans.find(obj => obj.id === user.id);
+                    if (bannedUserSchema) schema.tempBans = schema.tempBans.filter(obj => obj !== bannedUserSchema);
+                    await schema.save();
+                };
+                const bannedUser = client.tempMods.bans.find(obj => obj.guildId === guild.id && obj.userId === user.id);
+
+                if (!bannedUser) {
+                    client.tempMods.bans.push({
+                        guildId: guild.id,
+                        userId: user.id,
+                        duration: start + convertedDuration
+                    });
+                } else {
+                    bannedUser.duration = start + convertedDuration;
+                };
+
+                await guild.members.ban(user.id, {
+                    reason: reason,
+                });
+
+                await interaction.reply({ content: `**${interaction.user.tag}** banned <@${user.id}> for ${duration} with reason: ${reason || 'No reason provided'}` });
+                
+                setTimeout(async () => {
+                    const bannedUser2 = client.tempMods.bans.find(obj => obj.guildId === guild.id && obj.userId === user.id && obj.duration === start + convertedDuration);
+                    if (bannedUser2) await guild.members.unban(user.id, "Ban expired");
+                }, convertedDuration);
+            };
+        };
     }
 };

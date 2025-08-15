@@ -12,6 +12,8 @@ const client = new Client({
 });
 
 client.commands = new Collection();
+client.tempMods.mutes = [];
+client.tempMods.bans = [];
 
 client.login(token).then(() => {
     loadEvents(client);
