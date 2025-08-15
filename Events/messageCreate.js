@@ -76,6 +76,7 @@ module.exports = {
         };
 
         if (command === 'ping') {
+            const member = await guild.members.fetch(author.id)
             if (!member.permissions.has(PermissionsBitField.Flags.UseApplicationCommands)) return;
             const msg = await message.reply({ content: `My ping is ${client.ws.ping}ms!` })
             await message.delete().catch(e => {});

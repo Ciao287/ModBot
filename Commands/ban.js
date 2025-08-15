@@ -1,5 +1,6 @@
 const { SlashCommandBuilder, MessageFlags, PermissionFlagsBits, PermissionsBitField } = require("discord.js");
 const TempModSchema = require('../Models/TempMod.js');
+const ms = require('ms');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -60,7 +61,7 @@ module.exports = {
         };
 
         if (!duration) {
-            const schema = TempModSchema.findOne({Guild: guild.id});
+            const schema = await TempModSchema.findOne({Guild: guild.id});
             if (schema) {
                 const bannedUserSchema = schema.tempBans.find(obj => obj.id === user.id);
                 if (bannedUserSchema) schema.tempBans = schema.tempBans.filter(obj => obj !== bannedUserSchema);
@@ -78,7 +79,7 @@ module.exports = {
             await interaction.reply({ content: `**${interaction.user.tag}** banned <@${user.id}> with reason: ${reason || 'No reason provided'}` });
         } else {
             if (convertedDuration > 60 * 60 * 1000) {
-                let schema = TempModSchema.findOne({Guild: guild.id});
+                let schema = await TempModSchema.findOne({Guild: guild.id});
                 if (!schema) schema = new TempModSchema({
                     Guild: guild.id,
                     muteRole: false,
@@ -108,7 +109,7 @@ module.exports = {
 
                 await interaction.reply({ content: `**${interaction.user.tag}** banned <@${user.id}> for ${duration} with reason: ${reason || 'No reason provided'}` });
             } else {
-                const schema = TempModSchema.findOne({Guild: guild.id});
+                const schema = await TempModSchema.findOne({Guild: guild.id});
                 if (schema) {
                     const bannedUserSchema = schema.tempBans.find(obj => obj.id === user.id);
                     if (bannedUserSchema) schema.tempBans = schema.tempBans.filter(obj => obj !== bannedUserSchema);

@@ -2,7 +2,7 @@ const { Client, GatewayIntentBits, Partials, Collection } = require('discord.js'
 const { token } = require('./config.json');
 const { loadCommands } = require('./Handlers/commandHandler');
 const { loadEvents } = require('./Handlers/eventHandler');
-const TempModSchema = require('../Models/TempMod.js');
+const TempModSchema = require('./Models/TempMod.js');
 
 const { Guilds, GuildMembers, GuildMessages, MessageContent } = GatewayIntentBits;
 const { User, Message, GuildMember } = Partials;
@@ -15,8 +15,10 @@ const client = new Client({
 
 client.functions = require('./functions.js');
 client.commands = new Collection();
-client.tempMods.mutes = [];
-client.tempMods.bans = [];
+client.tempMods = {
+    mutes: [],
+    bans: []
+};
 
 process.on('SIGINT', async () => {
 	await client.functions.saveTempMods(client, TempModSchema);

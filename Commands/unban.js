@@ -32,7 +32,7 @@ module.exports = {
 
         if (!user) return;
 
-        const schema = TempModSchema.findOne({Guild: guild.id});
+        const schema = await TempModSchema.findOne({Guild: guild.id});
         if (schema) {
             const bannedUserSchema = schema.tempBans.find(obj => obj.id === user.id);
             if (bannedUserSchema) schema.tempBans = schema.tempBans.filter(obj => obj !== bannedUserSchema);
