@@ -37,7 +37,7 @@ module.exports = {
         let member = options.getString('member');
         const reason = options.getString('reason') || ''
 
-        if (!interaction.guild.members.me.permissions.has(PermissionsBitField.Flags.ModerateMembers)) return interaction.reply({ content: `I'm not allowed to mute or unmute people!`, flags: MessageFlags.Ephemeral });
+        if (!interaction.guild.members.me.permissions.has(PermissionsBitField.Flags.ModerateMembers)) return interaction.reply({ content: `I'm not allowed to set or remove timeouts!`, flags: MessageFlags.Ephemeral });
         if (interaction.guild.members.me.communicationDisabledUntilTimestamp > Date.now()) return interaction.reply({ content: `I can't perform this action because I'm currently timed out.`, flags: MessageFlags.Ephemeral });
 
         if (member.startsWith('<@')) member = member.replace(/[<@>]/g, '');
