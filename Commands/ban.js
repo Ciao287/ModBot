@@ -135,7 +135,10 @@ module.exports = {
                 
                 setTimeout(async () => {
                     const bannedUser2 = client.tempMods.bans.find(obj => obj.guildId === guild.id && obj.userId === user.id && obj.duration === start + convertedDuration);
-                    if (bannedUser2) await guild.members.unban(user.id, "Ban expired");
+                    if (bannedUser2) {
+                        await guild.members.unban(user.id, "Ban expired");
+                        client.tempMods.bans = client.tempMods.bans.filter(obj => obj !== bannedUser2);
+                    };
                 }, convertedDuration);
             };
         };

@@ -35,7 +35,7 @@ module.exports = {
                                         if (uid) {
                                             if (mutedUser.duration) {
                                                 if (mutedUser.duration < Date.now()) {
-                                                    uid.roles.remove(rid).catch(error => {
+                                                    uid.roles.remove(rid, "Mute expired").catch(error => {
                                                         if (!((error instanceof DiscordAPIError && error.code === 10011) || (error instanceof DiscordAPIError && error.code === 10007) || (error instanceof DiscordAPIError && error.code === 50013))) { console.error(error) };
                                                     }).then(async () => {
                                                         guild.tempMutes = guild.tempMutes.filter(obj => obj !== mutedUser);
