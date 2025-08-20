@@ -19,7 +19,7 @@ module.exports = {
         let member = options.getString('member');
         const reason = options.getString('reason') || ''
 
-        if (!interaction.guild.members.me.permissions.has(PermissionsBitField.Flags.ManageRoles)) return interaction.reply({ content: 'I\'m not allowed to mute or unmute people!', flags: MessageFlags.Ephemeral });
+        if (!interaction.guild.members.me.permissions.has(PermissionsBitField.Flags.ManageRoles)) return interaction.reply({ content: 'I\'m not allowed to manage roles!', flags: MessageFlags.Ephemeral });
         if (interaction.guild.members.me.communicationDisabledUntilTimestamp > Date.now()) return interaction.reply({ content: `I can't perform this action because I'm currently timed out.`, flags: MessageFlags.Ephemeral });
 
         if (member.startsWith('<@')) member = member.replace(/[<@>]/g, '');
@@ -33,6 +33,8 @@ module.exports = {
         if (!user) return;
         try {
             user = await guild.members.fetch(user.id);
+
+            if (user.roles.highest.position >= interaction.member.roles.highest.position && guild.ownerId !== interaction.member.id) return interaction.reply({ content: `You can't unmute <@${user.id}>! He has a higher or equal role than you.`, flags: MessageFlags.Ephemeral });
         } catch(error) {
             if(error.code === 10007) {
                 return interaction.reply({ content: `The user you specified is not on the server!`, flags: MessageFlags.Ephemeral });
@@ -74,8 +76,10 @@ module.exports = {
         };
 
         const mutedUserSchema = schema.tempMutes.find(obj => obj.id === user.id);
-        if (mutedUserSchema) schema.tempMutes = schema.tempMutes.filter(obj => obj !== mutedUserSchema);
-        await schema.save();
+        if (mutedUserSchema) {
+            schema.tempMutes = schema.tempMutes.filter(obj => obj !== mutedUserSchema);
+            await schema.save();
+        };
         
         const mutedUser = client.tempMods.mutes.find(obj => obj.guildId === guild.id && obj.userId === user.id);
         if (mutedUser) client.tempMods.mutes = client.tempMods.mutes.filter(obj => obj !== mutedUser);

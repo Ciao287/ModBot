@@ -82,7 +82,8 @@ module.exports = {
                 await user.timeout(convertedDuration, reason);
 
                 await interaction.reply({ content: `**${interaction.user.tag}** timed out <@${user.id}> for: **${duration}**. Reason: ${reason || 'No reason provided'}` });
-        }
+        };
+
         switch(subcommand) {
             case 'remove':
                 try {
@@ -106,6 +107,6 @@ module.exports = {
                 await user.timeout(null, reason);
 
                 await interaction.reply({ content: `**${interaction.user.tag}** removed the timeout from <@${user.id}> with reason: ${reason || 'No reason provided'}` });
-        }
+        };
     }
 };

@@ -31,7 +31,7 @@ module.exports = {
         };
         const reason = options.getString('reason') || '';
 
-        if (!interaction.guild.members.me.permissions.has(PermissionsBitField.Flags.ManageRoles)) return interaction.reply({ content: 'I\'m not allowed to mute or unmute people!', flags: MessageFlags.Ephemeral });
+        if (!interaction.guild.members.me.permissions.has(PermissionsBitField.Flags.ManageRoles)) return interaction.reply({ content: 'I\'m not allowed to manage roles!', flags: MessageFlags.Ephemeral });
         if (interaction.guild.members.me.communicationDisabledUntilTimestamp > Date.now()) return interaction.reply({ content: `I can't perform this action because I'm currently timed out.`, flags: MessageFlags.Ephemeral });
 
         if (member.startsWith('<@')) member = member.replace(/[<@>]/g, '');
@@ -127,7 +127,6 @@ module.exports = {
 
                 await interaction.reply({ content: `**${interaction.user.tag}** muted <@${user.id}> for ${duration} with reason: ${reason || 'No reason provided'}` });
             } else {
-                // const schema = await TempModSchema.findOne({Guild: guild.id});
                 const mutedUserSchema = schema.tempMutes.find(obj => obj.id === user.id);
                 if (mutedUserSchema) {
                     schema.tempMutes = schema.tempMutes.filter(obj => obj !== mutedUserSchema);
