@@ -127,20 +127,20 @@ module.exports = {
 
             try {
                 user = await guild.members.fetch(user.id);
-                let msgcont;
+                let msgCont;
 
-                if (user.id === client.application.id && !msgcont) msgcont = `I can't ban myself!`;
+                if (user.id === client.application.id && !msgCont) msgCont = `I can't ban myself!`;
 
-                if (user.id === member.id && !msgcont) msgcont = `You can't ban yourself!`;
+                if (user.id === member.id && !msgCont) msgCont = `You can't ban yourself!`;
                 
-                if (user.id === guild.ownerId && !msgcont) msgcont = `You can't ban the server owner!`;
+                if (user.id === guild.ownerId && !msgCont) msgCont = `You can't ban the server owner!`;
 
-                if (user.roles.highest.position >= member.roles.highest.position && guild.ownerId !== member.id && !msgcont) msgcont = `You can't ban <@${user.id}>! He has a higher or equal role than you.`;
+                if (user.roles.highest.position >= member.roles.highest.position && guild.ownerId !== member.id && !msgCont) msgCont = `You can't ban <@${user.id}>! He has a higher or equal role than you.`;
 
-                if (user.roles.highest.position >= guild.members.cache.get(client.user.id).roles.highest.position && !msgcont) msgcont = `I can't ban <@${user.id}>! He has a higher or equal role than me.`;
+                if (user.roles.highest.position >= guild.members.cache.get(client.user.id).roles.highest.position && !msgCont) msgCont = `I can't ban <@${user.id}>! He has a higher or equal role than me.`;
 
-                if (msgcont) {
-                    const msg = await message.reply({ content: msgcont });
+                if (msgCont) {
+                    const msg = await message.reply({ content: msgCont });
                     await message.delete().catch(e => {});
                     setTimeout(() => {
                         msg.delete();
@@ -341,14 +341,14 @@ module.exports = {
             const type = args[0].toLowerCase();
 
             if (type === 'setup') {
-                let msgcont;
-                if (!args[1] && !msgcont) msgcont = 'You must enter the role you want to become the new muteRole.'
+                let msgCont;
+                if (!args[1] && !msgCont) msgCont = 'You must enter the role you want to become the new muteRole.'
                 if (args[1]?.startsWith('<@&')) args[1] = args[1].replace(/[<@&>]/g, '');
                 const role = guild.roles.cache.get(args[1]);
-                if (!role && !msgcont) msgcont = 'The role you specified is invalid.'
-                if (role.position >= guild.members.me.roles.highest.position && !msgcont) msgcont = `I'm not allowed to manage this role because it's equal to or higher than my highest role. Please move it below my highest role or adjust my roles.`;
-                if (msgcont) {
-                    const msg = await message.reply({ content: msgcont });
+                if (!role && !msgCont) msgCont = 'The role you specified is invalid.'
+                if (role.position >= guild.members.me.roles.highest.position && !msgCont) msgCont = `I'm not allowed to manage this role because it's equal to or higher than my highest role. Please move it below my highest role or adjust my roles.`;
+                if (msgCont) {
+                    const msg = await message.reply({ content: msgCont });
                     await message.delete().catch(e => {});
                     setTimeout(() => {
                         msg.delete();
@@ -483,16 +483,16 @@ module.exports = {
             if (!user) return;
             try {
                 user = await guild.members.fetch(user.id);
-                let msgcont;
+                let msgCont;
 
-                if (user.id === client.application.id && !msgcont) msgcont = `I can't mute myself!`;
+                if (user.id === client.application.id && !msgCont) msgCont = `I can't mute myself!`;
 
-                if (user.id === member.id && !msgcont) msgcont = `You can't mute yourself!`;
+                if (user.id === member.id && !msgCont) msgCont = `You can't mute yourself!`;
 
-                if (user.roles.highest.position >= member.roles.highest.position && guild.ownerId !== member.id && !msgcont) msgcont = `You can't mute <@${user.id}>! He has a higher or equal role than you.`;
+                if (user.roles.highest.position >= member.roles.highest.position && guild.ownerId !== member.id && !msgCont) msgCont = `You can't mute <@${user.id}>! He has a higher or equal role than you.`;
                 
-                if (msgcont) {
-                    const msg = await message.reply({ content: msgcont });
+                if (msgCont) {
+                    const msg = await message.reply({ content: msgCont });
                     await message.delete().catch(e => {});
                     setTimeout(() => {
                         msg.delete();
