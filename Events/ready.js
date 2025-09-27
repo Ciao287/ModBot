@@ -14,7 +14,7 @@ module.exports = {
             });
 
             console.log('MongoDB connected!');
-        } catch (e) {
+        } catch (error) {
             console.error('MongoDB connection error:', error);
         };
 
